@@ -1,30 +1,20 @@
-import { createRouter } from "@tanstack/react-router";
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
-import { routeTree } from "./routeTree.gen.ts";
-import "./styles/tailwind.css";
-import "./common/i18n";
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App'
+import { createRouter } from '@tanstack/react-router'
+import { routeTree } from './routeTree.gen' // або ваш файл маршрутів
 
-const router = createRouter({ routeTree });
+export const router = createRouter({ routeTree })
 
-export type TanstackRouter = typeof router;
-
-declare module "@tanstack/react-router" {
-	interface Register {
-		// This infers the type of our router and registers it across your entire project
-		router: TanstackRouter;
-	}
+// Реєстрація роутера для повної типізації (TypeScript)
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
 }
 
-const rootElement = document.querySelector("#root") as Element;
-if (!rootElement.innerHTML) {
-	const root = ReactDOM.createRoot(rootElement);
-	root.render(
-		<React.StrictMode>
-			<React.Suspense fallback="loading">
-				<App router={router} />
-			</React.Suspense>
-		</React.StrictMode>
-	);
-}
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App router={router} />
+  </React.StrictMode>,
+)

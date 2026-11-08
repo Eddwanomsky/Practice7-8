@@ -8,26 +8,34 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	plugins: [
-		react(),
-		tailwindcss(),
-		tanstackRouter(),
-		copy({
-			targets: [
-				{
-					src: normalizePath(path.resolve("./src/assets/locales")),
-					dest: normalizePath(path.resolve("./public")),
-				},
-			],
-		}),
-	],
-	server: {
-		host: true,
-		strictPort: true,
-	},
-	test: {
-		environment: "jsdom",
-		setupFiles: ["./vitest.setup.ts"],
-		css: true,
-	},
+    plugins: [
+        react(),
+        tailwindcss(),
+        tanstackRouter(),
+        copy({
+            targets: [
+                {
+                    src: normalizePath(path.resolve("./src/assets/locales")),
+                    dest: normalizePath(path.resolve("./public")),
+                },
+            ],
+        }),
+    ],
+    server: {
+        host: true,
+        strictPort: true,
+        // Додали прокси для зв'язку з бекендом на порті 4000
+        proxy: {
+            '/api': {
+                target: 'http://localhost:4000',
+                changeOrigin: true,
+                secure: false,
+            },
+        },
+    },
+    test: {
+        environment: "jsdom",
+        setupFiles: ["./vitest.setup.ts"],
+        css: true,
+    },
 });
